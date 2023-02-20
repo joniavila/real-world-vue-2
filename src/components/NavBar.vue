@@ -1,9 +1,10 @@
 <template>
     <div id="nav" class="nav">
-        <router-link to="/" class="brand"> Real World Vue Events </router-link>
-        <nav>
-            <router-link :to="{name: 'event-list'}">Event List</router-link> |
-            <router-link :to="{name: 'event-create'}">Create</router-link>
+        <nav> 
+          <v-btn :to="{name: 'event-list'}"> Event List</v-btn>
+            <!-- <router-link>Event List</router-link> -->
+            <v-divider vertical style="margin:10px"></v-divider>
+          <v-btn :to="{name: 'event-create'}"> Event Create</v-btn>
         </nav>
     </div>
 </template>

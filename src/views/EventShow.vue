@@ -1,48 +1,36 @@
 <template>
-    <div>
-        <div class="event-header">
-          <span class="eyebrow">@{{ event.time }} on {{ event.date }}</span>
-          <h1 class="title">{{ event.title }}</h1>
-          <h5>Organized by {{ event.organizer }}</h5>
-          <h5>Category: {{ event.category }}</h5>
-        </div>
-        <BaseIcon name="map"><h2>Location</h2></BaseIcon>
-        <address>{{ event.location }}</address>
-        <h2>Event details</h2>
-        <p>{{ event.description }}</p>
-        <h2>Attendees
-          <span class="badge -fill-gradient">{{event.attendees ? event.attendees.length : 0}}</span>
-        </h2>
+    <v-container>
+      <v-card>
+        <v-card-title class="title">{{ event.title }}</v-card-title>
+        <v-card-subtitle class="eyebrow">@{{ event.time }} on {{ event.date }}</v-card-subtitle>
+        <v-card-title>Organized by {{ event.organizer ? event.organizer.name : '' }}</v-card-title>
+        <v-card-title>Category: {{ event.category }}</v-card-title>
+        <v-card-title><BaseIcon name="map"></BaseIcon>Location</v-card-title>
+        <v-card-subtitle>{{ event.location }}</v-card-subtitle>
+        <v-card-title>Event details</v-card-title>
+        <v-card-text>{{ event.description }}</v-card-text>
+        <v-card-title class="badge -fill-gradient">Attendees {{event.attendees ? event.attendees.length : 0}}</v-card-title>
         <ul class="list-group">
           <li v-for="(attendee, index) in event.attendees" :key="index" class="list-item">
-            <b>{{ attendee.name }}</b>
+            <v-card-subtitle>{{ attendee.name }}</v-card-subtitle>
           </li>
         </ul>
-      </div>
+      </v-card>
+    </v-container>
 </template>
 
 <script>
-import EventService from '@/services/EventService';
+import { mapState } from 'vuex'
 export default {
     props: {
       id: String
     },
-    data(){
-      return {
-        event:[]
-      }
-    },
     created(){
-      EventService.getEvent(this.id)
-        .then( res => {
-          if(res.data){
-            this.event = res.data
-          }
-        })
-        .catch( err => {
-          console.log('ERROR in event request: ',err)
-        })
-    }
+      this.$store.dispatch('fetchEvent', this.id)
+    },
+    computed: mapState({
+      event: state => state.events.event
+    })
 }
 </script>
 

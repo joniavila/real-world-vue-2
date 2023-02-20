@@ -10,11 +10,14 @@ const apiClient = Axios.create({
 })
 
 export default {
-    getEvents(){
-        return apiClient.get('/events')
+    getEvents(pagination){
+        return apiClient.get(`/events?_limit=${pagination.perPage}&_page=${pagination.page}`)
     },
     getEvent(id){
         return apiClient.get(`/events/${id}`)
+    },
+    postEvent(event){
+        return apiClient.post('/events',event)
     }
 
 }

@@ -1,10 +1,16 @@
 <template>
     <router-link class="event-link" :to="{name: 'event-show', params:{ id:`${event.id}`}}">
-        <div class="event-card -shadow">
-            <span class="eyebrow">@{{event.time}} on {{event.date}}</span>
-            <h4 class="title">{{ event.title }}</h4>
-            <BaseIcon name="users">{{event.attendees.length}} attendees</BaseIcon>
-        </div>
+        <v-card elevation="11" shaped class="event-card" >
+          <v-card-title>
+            {{ event.title }}
+          </v-card-title>
+          <v-card-subtitle>
+            @{{event.time}} on {{event.date}}
+          </v-card-subtitle>
+          <v-card-text>
+            <BaseIcon name="users">{{event.attendees ? event.attendees.length : 0}} attendees</BaseIcon>
+          </v-card-text>
+        </v-card>
     </router-link>
 </template>
 
@@ -21,8 +27,10 @@ export default {
 .event-card {
       padding: 20px;
       margin-bottom: 24px;
+      margin-left: 10%;;
       transition: all 0.2s linear;
       cursor: pointer;
+      width:80%
     }
     .event-card:hover {
       transform: scale(1.01);

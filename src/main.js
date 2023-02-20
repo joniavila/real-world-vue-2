@@ -4,7 +4,12 @@ import router from './router'
 import store from './store'
 import upperFirst from 'lodash/upperFirst'
 import camelCase from 'lodash/camelCase'
+import vuetify from './plugins/vuetify'
 
+
+
+
+Vue.config.productionTip = false
 const requireComponent = require.context(
   // The relative path of the components folder
   './components',
@@ -42,9 +47,9 @@ requireComponent.keys().forEach(fileName => {
 
 Vue.config.productionTip = false
 
-
 new Vue({
   router,
   store,
+  vuetify,
   render: h => h(App)
 }).$mount('#app')
