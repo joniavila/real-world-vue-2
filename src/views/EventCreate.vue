@@ -1,7 +1,10 @@
 <template>
   <div>
-    <h1>Event Create </h1>
+    <v-progress-linear
+        :active="isLoading" indeterminate>
+        </v-progress-linear>
     <v-container >
+      <h1 class="text-center">Event Create </h1>
         <form @submit.prevent="createNewEvent">
             <h3>Select a category</h3>
             <v-select :items="categories" label="" v-model="event.category"></v-select>
@@ -56,8 +59,9 @@
 <script>
 import { mapState } from 'vuex'
 export default {
-  components:{
-  }, 
+  computed:{
+    ...mapState(['notifications','users','categories','events'])
+  },
   data(){
     const times = []
     for(let i=1; i<= 24;i ++){
@@ -65,25 +69,22 @@ export default {
     }
     return{
       times,
-      categories: this.$store.state.categories,
       event: this.createFreshEventObject(),
       picker: (new Date(Date.now() - (new Date()).getTimezoneOffset() * 60000)).toISOString().substr(0, 10),
       error: {
         active:false,
         msg: ''
-      }
+      },
+      userOwner: {},
+      isLoading:false
     }
-  },
-  computed:{
-    ...mapState(['notifications','user'])
   },
   methods:{
     createFreshEventObject(){
-      const user = this.user.user
       const id = Math.floor(Math.random() * 100000)
       return {
         id:id,
-        user:user,
+        user:this.users?.user,
         category:'',
         organizer:'',
         title:'',
@@ -95,10 +96,11 @@ export default {
       }
     },
     createNewEvent(){
-
-      this.$store.dispatch('addEvent', this.event).then( () => {
+      this.isLoading=true
+      this.$store.dispatch('events/addEvent', this.event).then( () => {
         if(!this.notifications.errorMessage){
           this.createFreshEventObject()
+          this.isLoading = false
           this.$router.push({
             name:'event-show',
             params: {

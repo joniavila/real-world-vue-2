@@ -1,5 +1,5 @@
 <template>
-  <v-app>
+  <v-app dark>
     <v-app-bar app dark fluid>
       <router-link to="/" class="brand" > Real World Vue Events </router-link>
       <v-spacer></v-spacer>
@@ -28,7 +28,6 @@ export default {
       font-family: 'Montserrat', sans-serif;
       font-weight: 700;
       font-size: 2.5em;
-      color: #39b982;
       text-decoration: none;
     }
 </style>

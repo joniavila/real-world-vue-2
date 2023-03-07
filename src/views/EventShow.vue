@@ -20,17 +20,13 @@
 </template>
 
 <script>
-import { mapState } from 'vuex'
 export default {
     props: {
-      id: String
+      event:{
+        type:Object,
+        required:true
+      }
     },
-    created(){
-      this.$store.dispatch('fetchEvent', this.id)
-    },
-    computed: mapState({
-      event: state => state.events.event
-    })
 }
 </script>
 

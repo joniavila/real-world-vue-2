@@ -1,9 +1,11 @@
 import EventService from '@/services/EventService'
+export const namespaced = true
 
 export const state = {
     events:[],
     lengthEvents: 0,
-    event:{}
+    event:{},
+    perPage: 3
 }
 
 export const mutations = {
@@ -33,8 +35,10 @@ export const actions = {
           dispatch('modifyErrorMsg', err.message)
         })
       },
-      async fetchEvents({commit, dispatch},pagination){
-        await EventService.getEvents(pagination)
+      async fetchEvents({commit, dispatch,state},page){
+        return await EventService.getEvents({
+          perPage:state.perPage,
+          page})
           .then( res => {
             if(res.data.length > 0){
               commit('SET_EVENTS',res.data)
@@ -47,12 +51,14 @@ export const actions = {
           })
       },
       async fetchEvent({commit, dispatch}, id){
-        await EventService.getEvent(id).then( res => {
-          if(res.data){
+        try {
+          const res = await EventService.getEvent(id)
+          if (res.data) {
             commit('SET_EVENT', res.data)
+            return res.data
           }
-        }).catch( err => {
+        } catch (err) {
           dispatch('modifyErrorMsg', err.message)
-        })
+        }
       }
 }
