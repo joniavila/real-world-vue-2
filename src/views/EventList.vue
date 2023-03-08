@@ -1,22 +1,26 @@
 <template>
   <div>
+    <v-progress-linear
+      :active="isChangingPage" 
+      v-if="isChangingPage" 
+      indeterminate 
+      location="bottom"
+      color="red"
+      ></v-progress-linear>
     <div v-if="!isLoading">
       <h1 class="newTitle">Event List for {{ users.user.name }}</h1>
       <EventCard v-for="event in events.events" v-bind:key="event.id" :event="event"></EventCard>
       <div class="text-center">
         <v-pagination
-          v-model="page"
+          v-model="currentPage"
           @input="changePage"
-          :length="Math.ceil(events.lengthEvents/perPage)+1"
+          :length="calculatePagination"
           dark
           v-if="!isLoading"
         ></v-pagination>
       </div>
     </div>
-    <v-progress-linear
-    :active="isLoading" v-if="isLoading" indeterminate location="bottom">
-    </v-progress-linear>
-    <v-dialog v-model="error.active" >
+    <v-dialog v-model="error.active" :no-click-animation="true">
           <v-card>
         <v-card-title class="text-h3 red lighten-2">
             ERROR: {{ error.msg }}
@@ -40,6 +44,7 @@
 import EventCard from '@/components/EventCard.vue';
 import { mapState } from 'vuex';
 
+
 export default {
     data(){
       return{
@@ -47,39 +52,53 @@ export default {
         error: {
         active:false,
         msg: ''},
-        isLoading: true
+        currentPage: parseInt(this.$route.query.page) || 1,
+        isChangingPage: false
       }
     },
     components: {
         EventCard
     },
     computed: {
-      ...mapState(['events','users','notifications']),
-      page(){
-        return parseInt(this.$route.query.page) || 1
-      },
+      ...mapState(['events','users','notifications','isLoading']),
+      calculatePagination(){
+        if(this.events.lengthEvents % this.perPage >= 1){  
+          // 2 options:
+          var decimal = (this.events.lengthEvents/this.perPage) - Math.trunc(this.events.lengthEvents/this.perPage)
+          // 1 - the part decimal of the division is more than 0,5
+          if(decimal >= 0.5){
+            return Math.round(this.events.lengthEvents/this.perPage)
+          }else{
+          // 2 - the part decimal of the division is less than 0,5
+            return Math.round(this.events.lengthEvents/this.perPage)+1
+          }
+        }else if(this.events.lengthEvents % this.perPage === 0){
+          return Math.ceil(this.events.lengthEvents/this.perPage)
+        }
+        return 0
+      }
     },
     created(){
-      this.$store.dispatch('events/fetchEvents', this.page).then(() => {
+      this.$store.dispatch('modifyIsLoading',true)
+      this.$store.dispatch('events/fetchEvents', this.currentPage).then(() => {
         if(this.notifications.errorMessage){
           this.error.active = true
           this.error.msg = this.notifications.errorMessage
         }
-        this.isLoading= false
+        this.$store.dispatch('modifyIsLoading',false)
       })
     },
     methods:{
-      changePage(page){
-        this.isLoading=true
-        this.page = page
-        this.$router.push(`/?page=${page}`)
-        this.$store.dispatch('events/fetchEvents',page).then( ()=>{
-          if(this.notifications.errorMessage){
-          this.error.active = true
-          this.error.msg = this.notifications.errorMessage
-        }
-        this.isLoading= false
-        })
+      changePage(currentPage){
+        this.isChangingPage = true
+        this.$store.dispatch('events/fetchEvents',currentPage).then( ()=>{
+            if(this.notifications.errorMessage){
+              this.error.active = true
+              this.error.msg = this.notifications.errorMessage
+            }
+            this.isChangingPage = false
+          })
+      this.$router.push(`/?page=${currentPage}`)
       },
       closeDialogAndRetry(){
         this.error.active = false
@@ -96,6 +115,5 @@ export default {
   margin:24px;
   margin-left:40%;
   font-size: 2.5em;
-  color: #39b982;
 }
 </style>

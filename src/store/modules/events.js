@@ -42,7 +42,7 @@ export const actions = {
           .then( res => {
             if(res.data.length > 0){
               commit('SET_EVENTS',res.data)
-              commit('SET_LENGTH_EVENTS',res.data.length)
+              commit('SET_LENGTH_EVENTS',parseInt(res.headers['x-total-count']))
             }
           })
           .catch( err => {

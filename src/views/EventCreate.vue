@@ -1,8 +1,8 @@
 <template>
   <div>
-    <v-progress-linear
+    <!-- <v-progress-linear
         :active="isLoading" indeterminate>
-        </v-progress-linear>
+        </v-progress-linear> -->
     <v-container >
       <h1 class="text-center">Event Create </h1>
         <form @submit.prevent="createNewEvent">
@@ -96,7 +96,7 @@ export default {
       }
     },
     createNewEvent(){
-      this.isLoading=true
+      this.$store.dispatch('modifyIsLoading',true)
       this.$store.dispatch('events/addEvent', this.event).then( () => {
         if(!this.notifications.errorMessage){
           this.createFreshEventObject()

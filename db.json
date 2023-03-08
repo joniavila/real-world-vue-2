@@ -73,17 +73,6 @@
       ]
     },
     {
-      "id": 74764,
-      "category": "nature",
-      "organizer": "",
-      "title": "PEGARLE AL PESHO",
-      "description": "DALE DURO",
-      "location": "EN LAS CASA",
-      "date": "",
-      "time": "5:00",
-      "attendess": []
-    },
-    {
       "id": 88777,
       "category": "nature",
       "organizer": "",
@@ -103,6 +92,28 @@
       "location": "BARCELONA",
       "date": "",
       "time": "4:00",
+      "attendess": []
+    },
+    {
+      "id": 20143,
+      "category": "animal welfare",
+      "organizer": "",
+      "title": "animal 231231",
+      "description": "have a healthy animal",
+      "location": "Madrid",
+      "date": "",
+      "time": "5:00",
+      "attendess": []
+    },
+    {
+      "id": 13159,
+      "category": "education",
+      "organizer": "",
+      "title": "Edutacion Event",
+      "description": "Its a Education Event",
+      "location": "in the School ",
+      "date": "",
+      "time": "10:00",
       "attendess": []
     }
   ]

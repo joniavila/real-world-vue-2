@@ -19,11 +19,14 @@ props: {
         type: Number,
         default: 24
     },
-
+    color: {
+        type:String,
+        default: `#2196f3`
+    }
 },
 computed: {
     svg(){
-        return feather.icons[this.name].toSvg({class:'icon', height: this.height, width: this.width})
+        return feather.icons[this.name].toSvg({class:'icon', height: this.height, width: this.width, color:this.color})
     }
 }
 
@@ -34,7 +37,7 @@ computed: {
 .icon-wrapper {
   display: inline-flex;
   align-items: center;
-  color: rgba(0, 0, 0, 0.4);
+  color: 'primary';
   font-size: 1rem;
   font-weight: 600;
   margin-right: 6px;

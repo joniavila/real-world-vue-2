@@ -3,8 +3,8 @@ import VueRouter from 'vue-router'
 import EventList from '@/views/EventList.vue';
 import EventShow from '@/views/EventShow.vue';
 import EventCreate from '@/views/EventCreate.vue';
-import NProgress from 'nprogress';
-import store from '@/store/index.js';
+import NotFoundPage from '@/views/NotFoundPage.vue'
+import store from '@/store';
 Vue.use(VueRouter)
 
 const routes = [
@@ -18,7 +18,7 @@ const routes = [
     name: 'event-show',
     component: EventShow, 
     props:true,
-    beforeEnter(routeTo, routeFrom,next) {
+    beforeEnter(routeTo, routeFrom,next){
       store.dispatch('events/fetchEvent', routeTo.params.id).then( (response) => {
         routeTo.params.event = response
         next()
@@ -29,21 +29,34 @@ const routes = [
     path: '/event/create',
     name: 'event-create',
     component: EventCreate
+  },
+  {
+    path:'/404',
+    name: '404',
+    component: NotFoundPage
+  },
+  {
+    path:'*',
+    redirect: {
+      name: '404'
+    }
   }
 ]
-
 const router = new VueRouter({
   routes,
   mode:"history"
 })
 
-router.beforeEach((to,from,next) => {
-  NProgress.start()
+router.beforeEach((routeTo, routeFrom, next) => {
+  store.dispatch('modifyIsLoading',true)
+  console.log('se ejecuta')
   next()
 })
 
-router.afterEach( ()=> {
-  NProgress.done()
+router.afterEach(() => {
+  store.dispatch('modifyIsLoading',false)
 })
+
+
 
 export default router
